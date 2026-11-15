@@ -1,4 +1,4 @@
-﻿"""
+"""
 Requirements:
   - sqlite3
 """
@@ -255,7 +255,10 @@ class Driver_SQLite(BaseDriver):
             raise TypeError(f"Type `{str(type_)}` not supported.")
 
     @staticmethod
-    def connect(db_name: str, **kwargs) -> Driver_SQLite.Conn:
+    def connect(db_name: str, **kwargs) -> "Driver_SQLite.Conn":
+        # NOTE: the return type must stay a *string*: it is evaluated while the
+        # class body is still executing, so a bare `Driver_SQLite.Conn` raises
+        # NameError on Python < 3.14 (annotations are lazy only from 3.14 on).
         # `isolation_level=None` -> autocommit; MercurySQL manages transactions
         # explicitly (`db.do()` batches and `db.transaction()`).
         kwargs.setdefault("isolation_level", None)
