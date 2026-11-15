@@ -21,21 +21,28 @@ concurrency:
 jobs:
   test_driver_sqlite:
     name: Driver Test - SQLite (py${{ matrix.python-version }})
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         # `requires-python = ">=3.8"`, so 3.8 is the floor and the newest
-        # stable is the ceiling.
-        python-version: ["3.8", "3.11", "3.13"]
+        # stable is the ceiling. Python 3.8 is not available on the newest
+        # Ubuntu image, so that leg pins an older runner.
+        include:
+          - python-version: "3.8"
+            os: ubuntu-22.04
+          - python-version: "3.11"
+            os: ubuntu-latest
+          - python-version: "3.13"
+            os: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.3.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
         with:
           persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7
         with:
           python-version: ${{ matrix.python-version }}
 
