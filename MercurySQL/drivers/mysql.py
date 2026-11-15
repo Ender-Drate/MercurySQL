@@ -1,4 +1,4 @@
-﻿"""
+"""
 Requirements:
   - mysql-connector-python
 
